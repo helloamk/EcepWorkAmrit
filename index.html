@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amrit Timesheet Form</title>
+    <title>Amrit ECEP Timesheet Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,11 +42,6 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-        }
-
-        input[readonly] {
-            background-color: #f0f0f0;
-            cursor: not-allowed;
         }
 
         textarea {
@@ -108,16 +103,16 @@
 </head>
 <body>
     <div class="container">
-        <h1>Amrit !! Update Your Timesheet for ECEP</h1>
+        <h1>Amrit !! Update Your Timesheet</h1>
         <form id="timesheetForm">
-            <label for="date">Date * (Auto-filled)</label>
-            <input type="date" id="date" name="date" readonly required>
+            <label for="date">Date * (Required, Editable)</label>
+            <input type="date" id="date" name="date" required>
 
             <label for="projectTitle">Project Title (Optional)</label>
-            <input type="text" id="projectTitle" name="projectTitle" placeholder="e.g.,ToR/Rfp/Eoi....">
+            <input type="text" id="projectTitle" name="projectTitle" placeholder="RfP/ToR/Eoi....">
 
             <label for="contractingAuthority">Contracting Authority (Optional)</label>
-            <input type="text" id="contractingAuthority" name="contractingAuthority" placeholder="e.g.,WHO,UNDP,Oxfam...">
+            <input type="text" id="contractingAuthority" name="contractingAuthority" placeholder="e.g., UNDP,WHO,Oxfam,PPMo">
 
             <label for="workDone">Work Done * (Required)</label>
             <textarea id="workDone" name="workDone" rows="4" required placeholder="Describe the work..."></textarea>
@@ -135,7 +130,7 @@
         </div>
     </div>
 
-       <script>
+    <script>
         // Auto-fill today's date in YYYY-MM-DD format
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
@@ -202,4 +197,3 @@
     </script>
 </body>
 </html>
-
