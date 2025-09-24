@@ -4,13 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amrit ECEP Timesheet Form</title>
+    <title>Timesheet Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
+            line-height: 1.4;
         }
 
         .container {
@@ -32,21 +33,29 @@
             display: block;
             margin-top: 15px;
             font-weight: bold;
+            color: #555;
         }
 
         input,
         textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 5px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 16px;
+            /* Better mobile input */
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -54,9 +63,12 @@
             font-size: 16px;
             margin-top: 20px;
             cursor: pointer;
+            touch-action: manipulation;
+            /* Mobile-friendly */
         }
 
-        button:hover {
+        button:hover,
+        button:active {
             background-color: #45a049;
         }
 
@@ -67,19 +79,33 @@
 
         .view-link {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: #2196F3;
             color: white;
             text-decoration: none;
             border-radius: 4px;
+            font-size: 16px;
         }
 
-        .view-link:hover {
+        .view-link:hover,
+        .view-link:active {
             background-color: #0b7dda;
+        }
+
+        .error {
+            color: red;
+            padding: 10px;
+            background: #ffebee;
+            border-radius: 4px;
+            margin-top: 10px;
         }
 
         /* Mobile-friendly adjustments */
         @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
             .container {
                 padding: 20px;
             }
@@ -89,8 +115,11 @@
                 font-size: 1.5em;
             }
 
+            input,
+            textarea,
             button {
-                font-size: 14px;
+                font-size: 16px;
+                /* Prevents zoom on iOS */
             }
         }
     </style>
@@ -98,24 +127,25 @@
 
 <body>
     <div class="container">
-        <h1>Amrit !! Submit Your Timesheet for ECEP</h1>
+        <h1>Submit Your Timesheet</h1>
         <form id="timesheetForm">
             <label for="date">Date * (Required)</label>
             <input type="date" id="date" name="date" required>
 
-            <label for="projectTitle">Project Title</label>
-            <input type="text" id="projectTitle" name="projectTitle">
+            <label for="projectTitle">Project Title (Optional)</label>
+            <input type="text" id="projectTitle" name="projectTitle" placeholder="e.g., ToR/RFP/EOI for ...">
 
-            <label for="contractingAuthority">Contracting Authority</label>
-            <input type="text" id="contractingAuthority" name="contractingAuthority">
+            <label for="contractingAuthority">Contracting Authority (Optional)</label>
+            <input type="text" id="contractingAuthority" name="contractingAuthority" placeholder="e.g., WHO,UNDP,OXFAM,.....">
 
             <label for="workDone">Work Done * (Required)</label>
-            <textarea id="workDone" name="workDone" rows="4" required></textarea>
+            <textarea id="workDone" name="workDone" rows="4" required placeholder="Describe the work..."></textarea>
 
-            <label for="websiteUrl">Website URL</label>
-            <input type="url" id="websiteUrl" name="websiteUrl">
+            <label for="websiteUrl">Website URL (Optional)</label>
+            <input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://example.com">
 
             <button type="submit">Submit Timesheet</button>
+            <div id="errorMsg" class="error" style="display: none;"></div>
         </form>
 
         <div class="view-section">
@@ -127,46 +157,64 @@
 
     <script>
         document.getElementById('timesheetForm').addEventListener('submit', function (e) {
-            e.preventDefault();  // Stop default form submit
+            e.preventDefault();
 
-            // Get form values
-            const formData = {
-                date: document.getElementById('date').value,
-                projectTitle: document.getElementById('projectTitle').value,
-                contractingAuthority: document.getElementById('contractingAuthority').value,
-                workDone: document.getElementById('workDone').value,
-                websiteUrl: document.getElementById('websiteUrl').value
-            };
+            // Hide previous errors
+            document.getElementById('errorMsg').style.display = 'none';
 
-            // Check if required fields are filled (extra safety, though HTML handles it)
-            if (!formData.date || !formData.workDone) {
-                alert('Please fill in the required fields: Date and Work Done.');
+            // Create FormData (more reliable for GAS)
+            const formData = new FormData();
+            formData.append('date', document.getElementById('date').value);
+            formData.append('projectTitle', document.getElementById('projectTitle').value);
+            formData.append('contractingAuthority', document.getElementById('contractingAuthority').value);
+            formData.append('workDone', document.getElementById('workDone').value);
+            formData.append('websiteUrl', document.getElementById('websiteUrl').value);
+
+            // Check required fields
+            if (!formData.get('date') || !formData.get('workDone')) {
+                showError('Please fill in the required fields: Date and Work Done.');
                 return;
             }
 
             // Send to Google Apps Script
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby6ogNxgRCnDGoOlr-GKuFheOxTDo15IoOFVIdE_usg3OZTbOCGmtbiEm1lyQZsTMdEXA/exec';
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbzEDk6f5ZI1aMasMou9749s_bMmNH5OA0zI0I7ne7ZRJn7OczKmIjIXzcTPafChamHDYQ/exec';  // Replace with your URL from Step 1
             fetch(scriptURL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
+                body: formData  // No Content-Type - browser sets multipart/form-data automatically
             })
-                .then(response => response.json())
-                .then(data => {
+                .then(response => {
+                    console.log('Response status:', response.status);  // Debug: Check console (F12)
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.text();  // Get raw text first
+                })
+                .then(text => {
+                    console.log('Raw response:', text);  // Debug
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch {
+                        throw new Error('Invalid JSON response');
+                    }
                     if (data.result === 'success') {
-                        alert('Timesheet submitted successfully! Row added: ' + data.row);
-                        document.getElementById('timesheetForm').reset();  // Clear form
+                        alert('Timesheet submitted successfully! Check row ' + data.row + ' in your sheet.');
+                        document.getElementById('timesheetForm').reset();
                     } else {
-                        alert('Error submitting. Please try again.');
+                        throw new Error(data.message || 'Unknown error');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert('Network error. Check your connection and try again.');
+                    console.error('Full error:', error);  // Debug
+                    showError('Submission failed: ' + error.message + '. Check console (F12) for details or try again.');
                 });
         });
+
+        function showError(msg) {
+            const errorDiv = document.getElementById('errorMsg');
+            errorDiv.textContent = msg;
+            errorDiv.style.display = 'block';
+        }
     </script>
 </body>
 
