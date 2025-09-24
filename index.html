@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amrit Daily Work Log-ECEP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        #message {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Daily Work Log Form</h1>
+    <form id="workForm" enctype="multipart/form-data">
+        <label for="date">Date (Required):</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="dailyWork">Daily Work (Required):</label>
+        <textarea id="dailyWork" name="dailyWork" placeholder="Describe your daily work..." required></textarea>
+
+        <label for="file">Upload File (Optional: PDF, Photo, Doc, etc.):</label>
+        <input type="file" id="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+
+        <label for="websiteLink">Work-Related Website Link (Optional):</label>
+        <input type="url" id="websiteLink" name="websiteLink" placeholder="https://example.com">
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="message"></div>
+
+    <script>
+        document.getElementById('workForm').addEventListener('submit', function (e) {
+            e.preventDefault();  // Prevent default form post; use fetch for better UX
+
+            const formData = new FormData(this);
+            const messageDiv = document.getElementById('message');
+
+            fetch('https://script.google.com/macros/s/AKfycbzmqPV0r8_MCVAcirwVJBKCuNY8zId0q9hAUPbIuQsAOB3qoW3GQpDeis_Ps9nMj27q/exec', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.text())
+                .then(data => {
+                    messageDiv.textContent = data;
+                    messageDiv.className = data.includes('Success') ? 'success' : 'error';
+                    if (data.includes('Success')) {
+                        this.reset();  // Clear form
+                    }
+                })
+                .catch(error => {
+                    messageDiv.textContent = 'Error: ' + error;
+                    messageDiv.className = 'error';
+                });
+        });
+
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+    </script>
+</body>
+
+</html>
