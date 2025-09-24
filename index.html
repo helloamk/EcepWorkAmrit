@@ -1,199 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amrit ECEP Timesheet Form</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.4;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-            color: #555;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            margin-top: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        button {
-            width: 100%;
-            padding: 14px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: pointer;
-            touch-action: manipulation;
-        }
-
-        button:hover, button:active {
-            background-color: #45a049;
-        }
-
-        .view-section {
-            margin-top: 40px;
-            text-align: center;
-        }
-
-        .view-link {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #2196F3;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .view-link:hover, .view-link:active {
-            background-color: #0b7dda;
-        }
-
-        .error {
-            color: red;
-            padding: 10px;
-            background: #ffebee;
-            border-radius: 4px;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 20px; }
-            h1, h2 { font-size: 1.5em; }
-            input, textarea, button { font-size: 16px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amrit - ECEP Timesheet Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #555;
+      text-align: left;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 10px;
+      background: #007bff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .view-link {
+      margin-top: 20px;
+      display: block;
+      font-size: 14px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    .view-link:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Amrit !! Update Your Timesheet</h1>
-        <form id="timesheetForm">
-            <label for="date">Date * (Required, Editable)</label>
-            <input type="date" id="date" name="date" required>
+  <div class="form-container">
+    <h2>Amrit !! - Update your ECEP Timesheet Form</h2>
+    <form id="timesheetForm">
+      <label>Date (Required):</label>
+      <input type="date" name="date" required>
 
-            <label for="projectTitle">Project Title (Optional)</label>
-            <input type="text" id="projectTitle" name="projectTitle" placeholder="RfP/ToR/Eoi....">
+      <label>Project Title:</label>
+      <input type="text" name="projectTitle">
 
-            <label for="contractingAuthority">Contracting Authority (Optional)</label>
-            <input type="text" id="contractingAuthority" name="contractingAuthority" placeholder="e.g., UNDP,WHO,Oxfam,PPMo">
+      <label>Contracting Authority:</label>
+      <input type="text" name="contractingAuthority">
 
-            <label for="workDone">Work Done * (Required)</label>
-            <textarea id="workDone" name="workDone" rows="4" required placeholder="Describe the work..."></textarea>
+      <label>Work Done (Required):</label>
+      <textarea name="workDone" rows="3" required></textarea>
 
-            <label for="websiteUrl">Website URL (Optional)</label>
-            <input type="url" id="websiteUrl" name="websiteUrl" placeholder="https://example.com">
+      <label>Website URL:</label>
+      <input type="url" name="websiteUrl">
 
-            <button type="submit">Submit Timesheet</button>
-            <div id="errorMsg" class="error" style="display: none;"></div>
-        </form>
+      <button type="submit">Submit</button>
+      <div class="message" id="formMessage"></div>
+    </form>
 
-        <div class="view-section">
-            <h2>View Your Timesheet</h2>
-            <a href="https://docs.google.com/spreadsheets/d/1JvTqCetAN-oX97DC4jfi5wydW3hyJlhSvLB-aDZ2i8E/edit?usp=sharing" target="_blank" class="view-link">Open Google Sheet</a>
-        </div>
-    </div>
+    <!-- ✅ Added "View Your Form Data" link -->
+    <a class="view-link" href="https://docs.google.com/spreadsheets/d/188mhv6C9ZLJCRJrrCBckSCv1j2tk0HCJ7IhrvV9Lybk/edit?usp=sharing" target="_blank">
+      View Your Form Data
+    </a>
+  </div>
 
-    <script>
-        // Auto-fill today's date in YYYY-MM-DD format
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-            document.getElementById('date').value = today;
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxSgsjRJc6_j-ALNXdPSfn6sUWPs3BYgGnioBKk-FN6BkdvlwLn_5XrZtNkCZuzfkLV/exec";
+    const form = document.getElementById("timesheetForm");
+    const message = document.getElementById("formMessage");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+        const res = await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify(data)
         });
+        const result = await res.json();
 
-        document.getElementById('timesheetForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            document.getElementById('errorMsg').style.display = 'none';
-
-            const formData = new FormData();
-            formData.append('date', document.getElementById('date').value);
-            formData.append('projectTitle', document.getElementById('projectTitle').value);
-            formData.append('contractingAuthority', document.getElementById('contractingAuthority').value);
-            formData.append('workDone', document.getElementById('workDone').value);
-            formData.append('websiteUrl', document.getElementById('websiteUrl').value);
-
-            if (!formData.get('date') || !formData.get('workDone')) {
-                showError('Please ensure Date and Work Done are filled.');
-                return;
-            }
-
-            const scriptURL = 'https://script.google.com/macros/s/AKfycby6ogNxgRCnDGoOlr-GKuFheOxTDo15IoOFVIdE_usg3OZTbOCGmtbiEm1lyQZsTMdEXA/exec';
-            fetch(scriptURL, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                console.log('Response status:', response.status, response.statusText);
-                console.log('Response headers:', [...response.headers.entries()]);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                return response.text();
-            })
-            .then(text => {
-                console.log('Raw response:', text);
-                let data;
-                try {
-                    data = JSON.parse(text);
-                } catch {
-                    throw new Error('Invalid JSON response from Apps Script');
-                }
-                if (data.result === 'success') {
-                    alert('Timesheet submitted successfully! Check row ' + data.row + ' in your sheet.');
-                    document.getElementById('timesheetForm').reset();
-                    // Reset date to today after form clear
-                    document.getElementById('date').value = new Date().toISOString().split('T')[0];
-                } else {
-                    throw new Error(data.message || 'Unknown error from Apps Script');
-                }
-            })
-            .catch(error => {
-                console.error('Full error:', error);
-                showError('Submission failed: ' + error.message + '. Open console (F12) and share the details.');
-            });
-        });
-
-        function showError(msg) {
-            const errorDiv = document.getElementById('errorMsg');
-            errorDiv.textContent = msg;
-            errorDiv.style.display = 'block';
+        if (result.result === "success") {
+          message.style.color = "green";
+          message.textContent = "Form submitted successfully!";
+          form.reset();
+        } else {
+          throw new Error("Error submitting form");
         }
-    </script>
+      } catch (err) {
+        message.style.color = "red";
+        message.textContent = "Something went wrong. Try again!";
+      }
+    });
+  </script>
 </body>
 </html>
