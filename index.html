@@ -74,10 +74,10 @@
 </head>
 <body>
   <div class="form-container">
-    <h2>Amrit !! - Update your ECEP Timesheet Form</h2>
+    <h2>Amrit - ECEP Timesheet Form</h2>
     <form id="timesheetForm">
       <label>Date (Required):</label>
-      <input type="date" name="date" required>
+      <input type="date" name="date" id="dateField" required>
 
       <label>Project Title:</label>
       <input type="text" name="projectTitle">
@@ -95,7 +95,7 @@
       <div class="message" id="formMessage"></div>
     </form>
 
-    <!-- ✅ Added "View Your Form Data" link -->
+    <!-- Link to view Google Sheet -->
     <a class="view-link" href="https://docs.google.com/spreadsheets/d/188mhv6C9ZLJCRJrrCBckSCv1j2tk0HCJ7IhrvV9Lybk/edit?usp=sharing" target="_blank">
       View Your Form Data
     </a>
@@ -105,6 +105,14 @@
     const scriptURL = "https://script.google.com/macros/s/AKfycbxSgsjRJc6_j-ALNXdPSfn6sUWPs3BYgGnioBKk-FN6BkdvlwLn_5XrZtNkCZuzfkLV/exec";
     const form = document.getElementById("timesheetForm");
     const message = document.getElementById("formMessage");
+    const dateField = document.getElementById("dateField");
+
+    // Auto-fill today's date
+    function setTodayDate() {
+      const today = new Date().toISOString().split("T")[0];
+      dateField.value = today;
+    }
+    setTodayDate();
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -122,6 +130,7 @@
           message.style.color = "green";
           message.textContent = "Form submitted successfully!";
           form.reset();
+          setTodayDate(); // re-fill date after reset
         } else {
           throw new Error("Error submitting form");
         }
