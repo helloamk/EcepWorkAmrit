@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timesheet Form</title>
+    <title>Amrit Timesheet Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,11 +19,10 @@
             background: white;
             padding: 30px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        h1,
-        h2 {
+        h1, h2 {
             text-align: center;
             color: #333;
         }
@@ -36,8 +34,7 @@
             color: #555;
         }
 
-        input,
-        textarea {
+        input, textarea {
             width: 100%;
             padding: 12px;
             margin-top: 5px;
@@ -45,7 +42,11 @@
             border-radius: 4px;
             box-sizing: border-box;
             font-size: 16px;
-            /* Better mobile input */
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
         }
 
         textarea {
@@ -64,11 +65,9 @@
             margin-top: 20px;
             cursor: pointer;
             touch-action: manipulation;
-            /* Mobile-friendly */
         }
 
-        button:hover,
-        button:active {
+        button:hover, button:active {
             background-color: #45a049;
         }
 
@@ -87,8 +86,7 @@
             font-size: 16px;
         }
 
-        .view-link:hover,
-        .view-link:active {
+        .view-link:hover, .view-link:active {
             background-color: #0b7dda;
         }
 
@@ -100,43 +98,26 @@
             margin-top: 10px;
         }
 
-        /* Mobile-friendly adjustments */
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 20px;
-            }
-
-            h1,
-            h2 {
-                font-size: 1.5em;
-            }
-
-            input,
-            textarea,
-            button {
-                font-size: 16px;
-                /* Prevents zoom on iOS */
-            }
+            body { padding: 10px; }
+            .container { padding: 20px; }
+            h1, h2 { font-size: 1.5em; }
+            input, textarea, button { font-size: 16px; }
         }
     </style>
 </head>
-
 <body>
     <div class="container">
-        <h1>Submit Your Timesheet</h1>
+        <h1>Amrit !! Update Your Timesheet for ECEP</h1>
         <form id="timesheetForm">
-            <label for="date">Date * (Required)</label>
-            <input type="date" id="date" name="date" required>
+            <label for="date">Date * (Auto-filled)</label>
+            <input type="date" id="date" name="date" readonly required>
 
             <label for="projectTitle">Project Title (Optional)</label>
-            <input type="text" id="projectTitle" name="projectTitle" placeholder="e.g., ToR/RFP/EOI for ...">
+            <input type="text" id="projectTitle" name="projectTitle" placeholder="e.g.,ToR/Rfp/Eoi....">
 
             <label for="contractingAuthority">Contracting Authority (Optional)</label>
-            <input type="text" id="contractingAuthority" name="contractingAuthority" placeholder="e.g., WHO,UNDP,OXFAM,.....">
+            <input type="text" id="contractingAuthority" name="contractingAuthority" placeholder="e.g.,WHO,UNDP,Oxfam...">
 
             <label for="workDone">Work Done * (Required)</label>
             <textarea id="workDone" name="workDone" rows="4" required placeholder="Describe the work..."></textarea>
@@ -150,19 +131,21 @@
 
         <div class="view-section">
             <h2>View Your Timesheet</h2>
-            <a href="https://docs.google.com/spreadsheets/d/1JvTqCetAN-oX97DC4jfi5wydW3hyJlhSvLB-aDZ2i8E/edit?usp=sharing"
-                target="_blank" class="view-link">Open Google Sheet</a>
+            <a href="https://docs.google.com/spreadsheets/d/1JvTqCetAN-oX97DC4jfi5wydW3hyJlhSvLB-aDZ2i8E/edit?usp=sharing" target="_blank" class="view-link">Open Google Sheet</a>
         </div>
     </div>
 
     <script>
-        document.getElementById('timesheetForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+        // Auto-fill today's date in YYYY-MM-DD format
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+            document.getElementById('date').value = today;
+        });
 
-            // Hide previous errors
+        document.getElementById('timesheetForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             document.getElementById('errorMsg').style.display = 'none';
 
-            // Create FormData (more reliable for GAS)
             const formData = new FormData();
             formData.append('date', document.getElementById('date').value);
             formData.append('projectTitle', document.getElementById('projectTitle').value);
@@ -170,44 +153,45 @@
             formData.append('workDone', document.getElementById('workDone').value);
             formData.append('websiteUrl', document.getElementById('websiteUrl').value);
 
-            // Check required fields
             if (!formData.get('date') || !formData.get('workDone')) {
-                showError('Please fill in the required fields: Date and Work Done.');
+                showError('Please ensure Date and Work Done are filled.');
                 return;
             }
 
-            // Send to Google Apps Script
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbzEDk6f5ZI1aMasMou9749s_bMmNH5OA0zI0I7ne7ZRJn7OczKmIjIXzcTPafChamHDYQ/exec';  // Replace with your URL from Step 1
+            const scriptURL = 'https://script.google.com/macros/s/AKfycby6ogNxgRCnDGoOlr-GKuFheOxTDo15IoOFVIdE_usg3OZTbOCGmtbiEm1lyQZsTMdEXA/exec';
             fetch(scriptURL, {
                 method: 'POST',
-                body: formData  // No Content-Type - browser sets multipart/form-data automatically
+                body: formData
             })
-                .then(response => {
-                    console.log('Response status:', response.status);  // Debug: Check console (F12)
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-                    return response.text();  // Get raw text first
-                })
-                .then(text => {
-                    console.log('Raw response:', text);  // Debug
-                    let data;
-                    try {
-                        data = JSON.parse(text);
-                    } catch {
-                        throw new Error('Invalid JSON response');
-                    }
-                    if (data.result === 'success') {
-                        alert('Timesheet submitted successfully! Check row ' + data.row + ' in your sheet.');
-                        document.getElementById('timesheetForm').reset();
-                    } else {
-                        throw new Error(data.message || 'Unknown error');
-                    }
-                })
-                .catch(error => {
-                    console.error('Full error:', error);  // Debug
-                    showError('Submission failed: ' + error.message + '. Check console (F12) for details or try again.');
-                });
+            .then(response => {
+                console.log('Response status:', response.status, response.statusText);
+                console.log('Response headers:', [...response.headers.entries()]);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.text();
+            })
+            .then(text => {
+                console.log('Raw response:', text);
+                let data;
+                try {
+                    data = JSON.parse(text);
+                } catch {
+                    throw new Error('Invalid JSON response from Apps Script');
+                }
+                if (data.result === 'success') {
+                    alert('Timesheet submitted successfully! Check row ' + data.row + ' in your sheet.');
+                    document.getElementById('timesheetForm').reset();
+                    // Reset date to today after form clear
+                    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+                } else {
+                    throw new Error(data.message || 'Unknown error from Apps Script');
+                }
+            })
+            .catch(error => {
+                console.error('Full error:', error);
+                showError('Submission failed: ' + error.message + '. Open console (F12) and share the details.');
+            });
         });
 
         function showError(msg) {
@@ -217,5 +201,4 @@
         }
     </script>
 </body>
-
 </html>
